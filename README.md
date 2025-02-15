@@ -1,6 +1,7 @@
 # Recruitment Task for TravelPlanet
-The docker setup is based on Kévin Dunglas's [Symfony docker](https://github.com/dunglas/symfony-docker).
-The whole REST API is based on API Platform.
+- The docker setup is based on Kévin Dunglas's [Symfony docker](https://github.com/dunglas/symfony-docker).
+- The whole REST API is based on API Platform.
+- The CQRS pattern is implemented and integrated with symfony/messenger to handle commands and queries asynchronously on separate buses.
 
 ## Requirements
 - Docker Compose v2.10+
@@ -14,3 +15,6 @@ The whole REST API is based on API Platform.
 - [https://localhost](https://localhost) - Symfony app
 - [https://localhost/api](https://localhost/api) - Swagger UI
 - [https://localhost/api/docs](https://localhost/api/docs) - (alternatively) ReDoc UI
+
+## Running tests
+- `make unit-tests` - Run unit tests
