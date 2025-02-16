@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\PaymentSchedule;
+use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,28 +17,13 @@ class PaymentScheduleRepository extends ServiceEntityRepository
         parent::__construct($registry, PaymentSchedule::class);
     }
 
-    //    /**
-    //     * @return PaymentSchedule[] Returns an array of PaymentSchedule objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('p.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?PaymentSchedule
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function getSchedulesByProduct(Product $product): array
+    {
+        return $this->createQueryBuilder('ps')
+            ->andWhere('ps.product = :product')
+            ->setParameter('product', $product)
+            ->getQuery()
+            ->getResult();
+    }
 }
+

@@ -45,6 +45,9 @@ test: ## Start tests with phpunit, pass the parameter "c=" to add options to php
 unit-tests: ## Start unit tests with phpunit
 	@$(DOCKER_COMP) exec -e APP_ENV=test php bin/phpunit --testsuite=Unit
 
+integration-tests: ## Start integration tests with phpunit
+	@$(DOCKER_COMP) exec -e APP_ENV=test php bin/phpunit --testsuite=Integration
+
 ## —— Composer 🧙 ——————————————————————————————————————————————————————————————
 composer: ## Run composer, pass the parameter "c=" to run a given command, example: make composer c='req symfony/orm-pack'
 	@$(eval c ?=)
@@ -61,3 +64,9 @@ sf: ## List all Symfony commands or pass the parameter "c=" to run a given comma
 
 cc: c=c:c ## Clear the cache
 cc: sf
+
+setup-test: ## Setup the test environment
+	@$(SYMFONY) doctrine:database:drop --force --if-exists --env=test
+	@$(SYMFONY) doctrine:database:create --env=test
+	@$(SYMFONY) doctrine:schema:create --env=test
+	@$(SYMFONY) doctrine:fixtures:load --no-interaction --env=test
