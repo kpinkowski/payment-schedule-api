@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Dto\GenerateScheduleRequest;
-use App\Message\Query\GetPaymentScheduleQuery;
+use App\Api\Request\Dto\GenerateScheduleRequest;
+use App\Entity\Product;
+use App\Messenger\Command\CalculatePaymentScheduleCommand;
+use App\Messenger\Query\GetPaymentScheduleQuery;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\HandleTrait;
-use App\Message\Command\CalculatePaymentScheduleCommand;
-use App\Entity\Product;
-use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Handler\Query;
+namespace App\Messenger\Query\Handler;
 
-use App\Message\Query\GetPaymentScheduleQuery;
+use App\Messenger\Query\GetPaymentScheduleQuery;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler(bus: 'query.bus')]

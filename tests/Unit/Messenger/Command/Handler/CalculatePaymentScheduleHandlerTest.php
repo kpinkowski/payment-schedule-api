@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Handler\Command;
+namespace App\Tests\Unit\Messenger\Command\Handler;
 
-use App\Handler\Command\CalculatePaymentScheduleHandler;
-use App\Message\Command\CalculatePaymentScheduleCommand;
+use App\Messenger\Command\CalculatePaymentScheduleCommand;
+use App\Messenger\Command\Handler\CalculatePaymentScheduleHandler;
 use App\Service\PaymentScheduleCalculator;
 use DG\BypassFinals;
 use PHPUnit\Framework\MockObject\MockObject;

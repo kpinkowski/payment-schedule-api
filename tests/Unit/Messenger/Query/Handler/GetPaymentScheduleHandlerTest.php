@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Handler\Query;
+namespace App\Tests\Unit\Messenger\Query\Handler;
 
-use App\Handler\Query\GetPaymentScheduleHandler;
-use App\Message\Query\GetPaymentScheduleQuery;
+use App\Messenger\Query\GetPaymentScheduleQuery;
+use App\Messenger\Query\Handler\GetPaymentScheduleHandler;
 use DG\BypassFinals;
 use PHPUnit\Framework\TestCase;
 

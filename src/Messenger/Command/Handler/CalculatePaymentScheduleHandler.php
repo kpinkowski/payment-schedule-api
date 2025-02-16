@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Handler\Command;
+namespace App\Messenger\Command\Handler;
 
-use App\Message\Command\CalculatePaymentScheduleCommand;
+use App\Messenger\Command\CalculatePaymentScheduleCommand;
 use App\Service\PaymentScheduleCalculator;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 

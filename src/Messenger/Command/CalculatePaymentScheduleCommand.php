@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Message\Command;
+namespace App\Messenger\Command;
 
 use App\Entity\Product;
 
