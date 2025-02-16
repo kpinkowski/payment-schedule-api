@@ -52,6 +52,7 @@ class Product
 
     public function setPrice(int $price): static
     {
+        // TODO: Add validation for price
         $this->price = $price;
 
         return $this;

@@ -17,6 +17,9 @@ final class CalculatePaymentScheduleHandler
 
     public function __invoke(CalculatePaymentScheduleCommand $command): void
     {
-        $this->calculator->calculate($command->getProduct());
+        $this->calculator->calculate(
+            $command->getProduct(),
+            $command->getDateSold()
+        );
     }
 }

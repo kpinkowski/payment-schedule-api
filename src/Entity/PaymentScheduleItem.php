@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\PaymentScheduleItemRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use DateTimeInterface;
 
 #[ORM\Entity(repositoryClass: PaymentScheduleItemRepository::class)]
 class PaymentScheduleItem
@@ -21,8 +22,14 @@ class PaymentScheduleItem
     #[ORM\Column]
     private ?int $amount = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $dueDate = null;
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    private ?DateTimeInterface $dueDate = null;
+
+    public function __construct(int $amount, DateTimeInterface $dueDate)
+    {
+        $this->amount = $amount;
+        $this->dueDate = $dueDate;
+    }
 
     public function getId(): ?int
     {
@@ -48,17 +55,18 @@ class PaymentScheduleItem
 
     public function setAmount(int $amount): static
     {
+        // TODO: Add validation for amount
         $this->amount = $amount;
 
         return $this;
     }
 
-    public function getDueDate(): ?\DateTimeInterface
+    public function getDueDate(): ?DateTimeInterface
     {
         return $this->dueDate;
     }
 
-    public function setDueDate(\DateTimeInterface $dueDate): static
+    public function setDueDate(DateTimeInterface $dueDate): static
     {
         $this->dueDate = $dueDate;
 

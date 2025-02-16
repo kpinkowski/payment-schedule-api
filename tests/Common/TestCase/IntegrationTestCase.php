@@ -2,12 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Common;
+namespace App\Tests\Common\TestCase;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 abstract class IntegrationTestCase extends KernelTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        self::bootKernel();
+    }
+
     public function getService(string $name): object
     {
         return self::getContainer()->get($name);

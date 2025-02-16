@@ -6,22 +6,45 @@ namespace App\Tests\Unit\Service\PaymentRules;
 
 use App\Entity\Product;
 use App\Service\PaymentRules\StandardPaymentScheduleStrategy;
-use PHPUnit\Framework\Assert;
-use PHPUnit\Framework\TestCase;
+use App\Tests\Common\AssertObject\PaymentScheduleAssertObject;
+use App\Tests\Common\TestCase\UnitTestCase;
+use DateTime;
+use DateTimeInterface;
 
-final class StandardPaymentScheduleStrategyTest extends TestCase
+final class StandardPaymentScheduleStrategyTest extends UnitTestCase
 {
+    private StandardPaymentScheduleStrategy $strategy;
+
     protected function setUp(): void
     {
+        parent::setUp();
+
         $this->strategy = new StandardPaymentScheduleStrategy();
     }
 
-    public function testItDoesCalculatePaymentSchedule(): void
+    /**
+     * @dataProvider correctProductDataProvider
+     */
+    public function testItDoesCalculatePaymentSchedule(int $amount, DateTimeInterface $dateSold): void
     {
         $product = $this->createMock(Product::class);
+        $product->method('getPrice')->willReturn($amount);
 
-        $schedules = $this->strategy->generateSchedule($product);
+        $schedule = $this->strategy->generateSchedule($product, $dateSold);
 
-        Assert::assertIsArray($schedules);
+        PaymentScheduleAssertObject::assertThat($schedule)
+            ->hasProduct($product)
+            ->hasSameTotalAmountAsProduct($product)
+            ->hasInstalmentsNumberEqualTo(1)
+            ->installmentIsEqualTo(0, $amount);
+    }
+
+    public function correctProductDataProvider(): array
+    {
+        return [
+            [1000, new DateTime('2024-05-01')],
+            [2000, new DateTime('2024-03-01')],
+            [4000, new DateTime('2024-02-01')],
+        ];
     }
 }

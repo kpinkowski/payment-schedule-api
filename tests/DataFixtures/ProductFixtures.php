@@ -29,7 +29,7 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
     {
         $productType = $this->getReference(ProductTypeFixtures::PRODUCT_TYPE_1, ProductType::class);
 
-        return $this->createProduct(self::BASIC_PRODUCT, 100, $productType, 'EUR');
+        return $this->createProduct(self::BASIC_PRODUCT, 1200, $productType, 'EUR');
     }
 
     private function createProduct(string $name, int $price, ProductType $productType, string $currency): Product
