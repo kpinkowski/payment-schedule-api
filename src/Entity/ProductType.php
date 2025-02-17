@@ -2,12 +2,10 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ProductTypeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProductTypeRepository::class)]
-#[ApiResource]
 class ProductType
 {
     #[ORM\Id]
