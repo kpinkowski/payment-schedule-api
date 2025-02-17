@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Service\PaymentRules;
 
+use App\Entity\Money;
 use App\Entity\Product;
 use App\Exception\IncorrectProductDateSoldAndScheduleStrategyUsageLogicException;
 use App\Service\PaymentRules\JunePaymentScheduleStrategy;
@@ -32,8 +33,9 @@ final class JunePaymentScheduleStrategyTest extends UnitTestCase
         int $expectedLastInstalmentAmount,
         DateTimeInterface $dateSold
     ): void {
+        $money = new Money($amount, 'USD');
         $product = $this->createMock(Product::class);
-        $product->method('getPrice')->willReturn($amount);
+        $product->method('getPrice')->willReturn($money);
 
         $schedule = $this->strategy->generateSchedule($product, $dateSold);
 

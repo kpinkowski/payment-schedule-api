@@ -19,13 +19,13 @@ class PaymentScheduleItem
     #[ORM\JoinColumn(nullable: false)]
     private ?PaymentSchedule $paymentSchedule = null;
 
-    #[ORM\Column]
-    private ?int $amount = null;
+    #[ORM\Embedded(class: Money::class)]
+    private Money $amount;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?DateTimeInterface $dueDate = null;
 
-    public function __construct(int $amount, DateTimeInterface $dueDate)
+    public function __construct(Money $amount, DateTimeInterface $dueDate)
     {
         $this->amount = $amount;
         $this->dueDate = $dueDate;
@@ -48,19 +48,6 @@ class PaymentScheduleItem
         return $this;
     }
 
-    public function getAmount(): ?int
-    {
-        return $this->amount;
-    }
-
-    public function setAmount(int $amount): static
-    {
-        // TODO: Add validation for amount
-        $this->amount = $amount;
-
-        return $this;
-    }
-
     public function getDueDate(): ?DateTimeInterface
     {
         return $this->dueDate;
@@ -71,5 +58,10 @@ class PaymentScheduleItem
         $this->dueDate = $dueDate;
 
         return $this;
+    }
+
+    public function getAmount(): Money
+    {
+        return $this->amount;
     }
 }

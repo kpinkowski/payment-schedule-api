@@ -25,8 +25,8 @@ class PaymentSchedule
     #[ORM\OneToMany(targetEntity: PaymentScheduleItem::class, mappedBy: 'paymentSchedule', cascade: ['persist'], orphanRemoval: true)]
     private Collection $paymentScheduleItems;
 
-    #[ORM\Column]
-    private int $totalAmount;
+    #[ORM\Embedded(class: Money::class)]
+    private Money $totalAmount;
 
     public function __construct()
     {
@@ -46,7 +46,7 @@ class PaymentSchedule
     public function setProduct(Product $product): static
     {
         $this->product = $product;
-        $this->totalAmount = $product->getPrice();
+        $this->totalAmount = clone $product->getPrice();
 
         return $this;
     }
@@ -81,14 +81,8 @@ class PaymentSchedule
         return $this;
     }
 
-    public function getTotalAmount(): int
+    public function getTotalAmount(): Money
     {
         return $this->totalAmount;
-    }
-
-    public function setTotalAmount(int $totalAmount): void
-    {
-        // TODO: Add validation for totalAmount
-        $this->totalAmount = $totalAmount;
     }
 }

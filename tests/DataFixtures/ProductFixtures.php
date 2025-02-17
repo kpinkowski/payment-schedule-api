@@ -2,6 +2,7 @@
 
 namespace App\Tests\DataFixtures;
 
+use App\Entity\Money;
 use App\Entity\Product;
 use App\Entity\ProductType;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -29,17 +30,17 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
     {
         $productType = $this->getReference(ProductTypeFixtures::PRODUCT_TYPE_1, ProductType::class);
 
-        return $this->createProduct(self::BASIC_PRODUCT, 1200, $productType, 'EUR');
+        return $this->createProduct(self::BASIC_PRODUCT, 1200, $productType, 'USD');
     }
 
-    private function createProduct(string $name, int $price, ProductType $productType, string $currency): Product
+    private function createProduct(string $name, int $priceAmount, ProductType $productType, string $currency): Product
     {
         $product = new Product();
 
         $product->setName($name);
         $product->setProductType($productType);
+        $price = new Money($priceAmount, $currency);
         $product->setPrice($price);
-        $product->setCurrency($currency);
 
         return $product;
     }

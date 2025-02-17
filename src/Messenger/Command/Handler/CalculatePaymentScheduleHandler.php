@@ -11,7 +11,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 #[AsMessageHandler(bus: 'command.bus')]
 final class CalculatePaymentScheduleHandler
 {
-    public function __construct(private PaymentScheduleCalculator $calculator)
+    public function __construct(private readonly PaymentScheduleCalculator $calculator)
     {
     }
 

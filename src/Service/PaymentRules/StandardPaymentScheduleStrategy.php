@@ -15,9 +15,8 @@ final class StandardPaymentScheduleStrategy implements PaymentScheduleStrategyIn
     {
         $paymentSchedule = new PaymentSchedule();
         $paymentSchedule->setProduct($product);
-        $paymentSchedule->setTotalAmount($product->getPrice());
 
-        $paymentScheduleItem = new PaymentScheduleItem($product->getPrice(), $dateSold);
+        $paymentScheduleItem = new PaymentScheduleItem(clone $product->getPrice(), $dateSold);
         $paymentSchedule->addPaymentScheduleItem($paymentScheduleItem);
 
         return $paymentSchedule;

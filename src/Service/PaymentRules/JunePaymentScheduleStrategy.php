@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\PaymentRules;
 
+use App\Entity\Money;
 use App\Entity\PaymentSchedule;
 use App\Entity\PaymentScheduleItem;
 use App\Entity\Product;
@@ -22,15 +23,17 @@ final class JunePaymentScheduleStrategy implements PaymentScheduleStrategyInterf
 
         $paymentSchedule = new PaymentSchedule();
         $paymentSchedule->setProduct($product);
-        $paymentSchedule->setTotalAmount($product->getPrice());
 
-        $firstInstallmentAmount = (int) floor($product->getPrice() * 30 / 100);
-        $secondInstallmentAmount = $product->getPrice() - $firstInstallmentAmount;
+        $firstInstallmentAmount = (int) floor($product->getPrice()->getAmount() * 30 / 100);
+        $secondInstallmentAmount = $product->getPrice()->getAmount() - $firstInstallmentAmount;
+
+        $firstInstalment = new Money($firstInstallmentAmount, $product->getPrice()->getCurrency());
+        $secondInstalment = new Money($secondInstallmentAmount, $product->getPrice()->getCurrency());
 
         $secondInstalmentDueDate = (new DateTime())->modify('+3 months')->modify('last day of this month');
 
-        $firstInstallment = new PaymentScheduleItem($firstInstallmentAmount, new DateTimeImmutable());
-        $secondInstallment = new PaymentScheduleItem($secondInstallmentAmount, $secondInstalmentDueDate);
+        $firstInstallment = new PaymentScheduleItem($firstInstalment, new DateTimeImmutable());
+        $secondInstallment = new PaymentScheduleItem($secondInstalment, $secondInstalmentDueDate);
 
         $paymentSchedule->addPaymentScheduleItem($firstInstallment);
         $paymentSchedule->addPaymentScheduleItem($secondInstallment);

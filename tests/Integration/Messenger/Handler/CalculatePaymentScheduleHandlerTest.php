@@ -47,6 +47,6 @@ final class CalculatePaymentScheduleHandlerTest extends IntegrationTestCase
             ->hasProduct($product)
             ->hasSameTotalAmountAsProduct($product)
             ->hasInstalmentsNumberEqualTo(1)
-            ->installmentIsEqualTo(0, $product->getPrice());
+            ->installmentIsEqualTo(0, $product->getPrice()->getAmount());
     }
 }

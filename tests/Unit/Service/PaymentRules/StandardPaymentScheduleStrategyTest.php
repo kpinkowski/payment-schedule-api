@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Service\PaymentRules;
 
+use App\Entity\Money;
 use App\Entity\Product;
 use App\Service\PaymentRules\StandardPaymentScheduleStrategy;
 use App\Tests\Common\AssertObject\PaymentScheduleAssertObject;
@@ -27,8 +28,9 @@ final class StandardPaymentScheduleStrategyTest extends UnitTestCase
      */
     public function testItDoesCalculatePaymentSchedule(int $amount, DateTimeInterface $dateSold): void
     {
+        $money = new Money($amount, 'USD');
         $product = $this->createMock(Product::class);
-        $product->method('getPrice')->willReturn($amount);
+        $product->method('getPrice')->willReturn($money);
 
         $schedule = $this->strategy->generateSchedule($product, $dateSold);
 

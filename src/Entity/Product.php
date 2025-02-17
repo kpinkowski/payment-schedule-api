@@ -18,11 +18,8 @@ class Product
     #[ORM\Column(length: 255)]
     private string $name;
 
-    #[ORM\Column]
-    private int $price;
-
-    #[ORM\Column(length: 255)]
-    private ?string $currency = null;
+    #[ORM\Embedded(class: Money::class)]
+    private Money $price;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -45,31 +42,6 @@ class Product
         return $this;
     }
 
-    public function getPrice(): int
-    {
-        return $this->price;
-    }
-
-    public function setPrice(int $price): static
-    {
-        // TODO: Add validation for price
-        $this->price = $price;
-
-        return $this;
-    }
-
-    public function getCurrency(): ?string
-    {
-        return $this->currency;
-    }
-
-    public function setCurrency(string $currency): static
-    {
-        $this->currency = $currency;
-
-        return $this;
-    }
-
     public function getProductType(): ?ProductType
     {
         return $this->productType;
@@ -80,5 +52,15 @@ class Product
         $this->productType = $productType;
 
         return $this;
+    }
+
+    public function getPrice(): Money
+    {
+        return $this->price;
+    }
+
+    public function setPrice(Money $price): void
+    {
+        $this->price = $price;
     }
 }
