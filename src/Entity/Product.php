@@ -18,14 +18,14 @@ class Product
     #[ORM\Column(length: 255)]
     private string $name;
 
-    #[ORM\Column]
-    private DateTimeImmutable $dateSold;
-
     #[ORM\Column(length: 255)]
     private string $productType;
 
     #[ORM\Embedded(class: Money::class)]
     private Money $price;
+
+    #[ORM\Column]
+    private DateTimeImmutable $dateSold;
 
     public function __construct(
         string $name,
@@ -49,11 +49,6 @@ class Product
         return $this->name;
     }
 
-    public function getDateSold(): DateTimeImmutable
-    {
-        return $this->dateSold;
-    }
-
     public function getProductType(): ProductType
     {
         return ProductType::from($this->productType);
@@ -62,5 +57,10 @@ class Product
     public function getPrice(): Money
     {
         return $this->price;
+    }
+
+    public function getDateSold(): DateTimeImmutable
+    {
+        return $this->dateSold;
     }
 }

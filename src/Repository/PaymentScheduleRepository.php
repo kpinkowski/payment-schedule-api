@@ -17,13 +17,14 @@ class PaymentScheduleRepository extends ServiceEntityRepository
         parent::__construct($registry, PaymentSchedule::class);
     }
 
-    public function getSchedulesByProduct(Product $product): array
+    public function getSchedule(int $scheduleId): ?PaymentSchedule
     {
-        return $this->createQueryBuilder('ps')
-            ->andWhere('ps.product = :product')
-            ->setParameter('product', $product)
+       return $this->createQueryBuilder('p')
+            ->select('p')
+            ->where('p.id = :id')
+            ->setParameter('id', $scheduleId)
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
     }
 }
 

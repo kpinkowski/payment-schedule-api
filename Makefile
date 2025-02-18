@@ -48,6 +48,9 @@ unit-tests: ## Start unit tests with phpunit
 integration-tests: ## Start integration tests with phpunit
 	@$(DOCKER_COMP) exec -e APP_ENV=test php bin/phpunit --testsuite=Integration
 
+application-tests: ## Start application tests with phpunit
+	@$(DOCKER_COMP) exec -e APP_ENV=test php bin/phpunit --testsuite=Application
+
 ## —— Composer 🧙 ——————————————————————————————————————————————————————————————
 composer: ## Run composer, pass the parameter "c=" to run a given command, example: make composer c='req symfony/orm-pack'
 	@$(eval c ?=)

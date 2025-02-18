@@ -17,14 +17,14 @@ class Money
     #[ORM\Column(type: "string", length: 3)]
     private string $currency;
 
-    public function __construct(int $amount, Currency $currency)
+    public function __construct(int $amount, string $currency)
     {
         if ($amount < 0) {
             throw new AmountCannotBeNegativeException();
         }
 
         $this->amount = $amount;
-        $this->currency = strtoupper($currency->value);
+        $this->currency = strtoupper($currency);
     }
 
     public function getAmount(): int

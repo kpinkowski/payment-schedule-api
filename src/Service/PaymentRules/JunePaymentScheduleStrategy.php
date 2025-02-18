@@ -26,10 +26,10 @@ final class JunePaymentScheduleStrategy implements PaymentScheduleStrategyInterf
         $firstInstallmentAmount = (int) floor($product->getPrice()->getAmount() * 30 / 100);
         $secondInstallmentAmount = $product->getPrice()->getAmount() - $firstInstallmentAmount;
 
-        $firstInstalment = new Money($firstInstallmentAmount, $product->getPrice()->getCurrency());
-        $secondInstalment = new Money($secondInstallmentAmount, $product->getPrice()->getCurrency());
+        $firstInstalment = new Money($firstInstallmentAmount, $product->getPrice()->getCurrency()->value);
+        $secondInstalment = new Money($secondInstallmentAmount, $product->getPrice()->getCurrency()->value);
 
-        $secondInstalmentDueDate = (new DateTime())->modify('+3 months')->modify('last day of this month');
+        $secondInstalmentDueDate = (new DateTimeImmutable())->modify('+3 months')->modify('last day of this month');
 
         $firstInstallment = new PaymentScheduleItem($firstInstalment, new DateTimeImmutable());
         $secondInstallment = new PaymentScheduleItem($secondInstalment, $secondInstalmentDueDate);

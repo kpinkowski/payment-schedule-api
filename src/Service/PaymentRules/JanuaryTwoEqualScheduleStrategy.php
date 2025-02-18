@@ -9,7 +9,7 @@ use App\Entity\PaymentSchedule;
 use App\Entity\PaymentScheduleItem;
 use App\Entity\Product;
 use App\Exception\IncorrectProductDateSoldAndScheduleStrategyUsageLogicException;
-use DateTime;
+use DateTimeImmutable;
 
 final class JanuaryTwoEqualScheduleStrategy implements PaymentScheduleStrategyInterface
 {
@@ -25,11 +25,11 @@ final class JanuaryTwoEqualScheduleStrategy implements PaymentScheduleStrategyIn
         $firstInstallmentAmount = (int) floor($product->getPrice()->getAmount() / 2);
         $secondInstallmentAmount = $product->getPrice()->getAmount() - $firstInstallmentAmount;
 
-        $firstInstallment = new Money($firstInstallmentAmount, $product->getPrice()->getCurrency());
-        $secondInstallment = new Money($secondInstallmentAmount, $product->getPrice()->getCurrency());
+        $firstInstallment = new Money($firstInstallmentAmount, $product->getPrice()->getCurrency()->value);
+        $secondInstallment = new Money($secondInstallmentAmount, $product->getPrice()->getCurrency()->value);
 
-        $firstInstallmentDueDate = (new DateTime())->modify('last day of this month');
-        $secondInstalmentDueDate = (new DateTime())->modify('+1 month')->modify('last day of this month');
+        $firstInstallmentDueDate = (new DateTimeImmutable())->modify('last day of this month');
+        $secondInstalmentDueDate = (new DateTimeImmutable())->modify('+1 month')->modify('last day of this month');
 
         $firstInstallment = new PaymentScheduleItem($firstInstallment, $firstInstallmentDueDate);
         $secondInstallment = new PaymentScheduleItem($secondInstallment, $secondInstalmentDueDate);

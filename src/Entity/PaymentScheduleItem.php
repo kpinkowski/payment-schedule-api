@@ -5,7 +5,7 @@ namespace App\Entity;
 use App\Repository\PaymentScheduleItemRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use DateTimeInterface;
+use DateTimeImmutable;
 
 #[ORM\Entity(repositoryClass: PaymentScheduleItemRepository::class)]
 class PaymentScheduleItem
@@ -23,9 +23,9 @@ class PaymentScheduleItem
     private Money $amount;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
-    private ?DateTimeInterface $dueDate = null;
+    private ?DateTimeImmutable $dueDate = null;
 
-    public function __construct(Money $amount, DateTimeInterface $dueDate)
+    public function __construct(Money $amount, DateTimeImmutable $dueDate)
     {
         $this->amount = $amount;
         $this->dueDate = $dueDate;
@@ -48,7 +48,7 @@ class PaymentScheduleItem
         return $this;
     }
 
-    public function getDueDate(): ?DateTimeInterface
+    public function getDueDate(): ?DateTimeImmutable
     {
         return $this->dueDate;
     }

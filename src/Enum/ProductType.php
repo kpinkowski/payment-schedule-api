@@ -8,7 +8,7 @@ enum ProductType: string
 {
     case ELECTRONICS = 'electronics';
     case FURNITURE = 'furniture';
-    case SUBSCRIPTION = 'subscription';
+    case CARS = 'cars';
 
     public static function values(): array
     {

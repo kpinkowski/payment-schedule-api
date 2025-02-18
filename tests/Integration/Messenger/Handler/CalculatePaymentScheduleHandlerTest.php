@@ -64,7 +64,7 @@ final class CalculatePaymentScheduleHandlerTest extends IntegrationTestCase
     public function productDataProvider(): array
     {
         return [
-            ['someProduct', '2024-05-01', ProductType::ELECTRONICS, new Money(1000, Currency::USD)],
+            ['someProduct', '2024-05-01', ProductType::ELECTRONICS, new Money(1000, Currency::USD->value)],
         ];
     }
 }

@@ -53,7 +53,7 @@ final class PaymentScheduleCalculatorTest extends UnitTestCase
         $dateSold = new DateTimeImmutable('2024-01-01');
         $product = $this->createMock(Product::class);
         $product->method('getDateSold')->willReturn($dateSold);
-        $product->method('getPrice')->willReturn(new Money(1000, Currency::USD));
+        $product->method('getPrice')->willReturn(new Money(1000, Currency::USD->value));
         $product->method('getProductType')->willReturn(ProductType::ELECTRONICS);
 
         $this->januaryTwoEqualScheduleStrategy->expects($this->once())
@@ -68,7 +68,7 @@ final class PaymentScheduleCalculatorTest extends UnitTestCase
         $dateSold = new DateTimeImmutable('2024-06-01');
         $product = $this->createMock(Product::class);
         $product->method('getDateSold')->willReturn($dateSold);
-        $product->method('getPrice')->willReturn(new Money(1000, Currency::USD));
+        $product->method('getPrice')->willReturn(new Money(1000, Currency::USD->value));
         $product->method('getProductType')->willReturn(ProductType::ELECTRONICS);
 
         $this->junePaymentScheduleStrategy->expects($this->once())
@@ -83,7 +83,7 @@ final class PaymentScheduleCalculatorTest extends UnitTestCase
         $dateSold = new DateTimeImmutable('2024-12-01');
         $product = $this->createMock(Product::class);
         $product->method('getDateSold')->willReturn($dateSold);
-        $product->method('getPrice')->willReturn(new Money(1000, Currency::USD));
+        $product->method('getPrice')->willReturn(new Money(1000, Currency::USD->value));
         $product->method('getProductType')->willReturn(ProductType::ELECTRONICS);
 
         $this->decemberYearlyScheduleStrategy->expects($this->once())
@@ -98,7 +98,7 @@ final class PaymentScheduleCalculatorTest extends UnitTestCase
         $dateSold = new DateTimeImmutable('2024-05-01');
         $product = $this->createMock(Product::class);
         $product->method('getDateSold')->willReturn($dateSold);
-        $product->method('getPrice')->willReturn(new Money(1000, Currency::USD));
+        $product->method('getPrice')->willReturn(new Money(1000, Currency::USD->value));
         $product->method('getProductType')->willReturn(ProductType::ELECTRONICS);
 
         $this->standardPaymentScheduleStrategy->expects($this->once())

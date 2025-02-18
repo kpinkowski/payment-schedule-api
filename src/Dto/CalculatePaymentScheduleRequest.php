@@ -7,38 +7,37 @@ namespace App\Dto;
 use App\Enum\ProductType;
 use App\Entity\Money;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Serializer\Annotation\SerializedName;
 use App\Messenger\Command\CalculatePaymentScheduleCommand;
 use DateTimeImmutable;
 
-final class CalculatePaymentScheduleDto
+final class CalculatePaymentScheduleRequest
 {
-    #[Assert\NotBlank]
-    #[Assert\Type(ProductType::class)]
-    public readonly ProductType $productType;
-
     #[Assert\NotBlank]
     #[Assert\Type('string')]
     #[Assert\Length(min: 3, max: 255)]
-    public readonly string $productName;
+    public string $productName;
+
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
+    #[Assert\Choice(callback: [ProductType::class, 'values'])]
+    public string $productType;
 
     #[Assert\NotBlank]
     #[Assert\Type(Money::class)]
-    public readonly Money $productPrice;
+    public Money $productPrice;
 
     #[Assert\NotBlank]
     #[Assert\Type('string')]
     #[Assert\Date]
-    #[SerializedName('productSoldDate')]
-    public readonly string $productSoldDate;
+    public string $productDateSold;
 
     public function toCommand(): CalculatePaymentScheduleCommand
     {
         return new CalculatePaymentScheduleCommand(
-            $this->productType,
+            ProductType::from($this->productType),
             $this->productName,
             $this->productPrice,
-            new DateTimeImmutable($this->productSoldDate)
+            new DateTimeImmutable($this->productDateSold)
         );
     }
 }

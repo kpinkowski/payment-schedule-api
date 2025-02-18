@@ -28,7 +28,7 @@ final class StandardPaymentScheduleStrategyTest extends UnitTestCase
      */
     public function testItDoesCalculatePaymentSchedule(int $amount, DateTimeImmutable $dateSold): void
     {
-        $money = new Money($amount, Currency::USD);
+        $money = new Money($amount, Currency::USD->value);
         $product = $this->createMock(Product::class);
         $product->method('getPrice')->willReturn($money);
         $product->method('getDateSold')->willReturn($dateSold);

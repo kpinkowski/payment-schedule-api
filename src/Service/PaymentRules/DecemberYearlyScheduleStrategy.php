@@ -10,6 +10,7 @@ use App\Entity\PaymentScheduleItem;
 use App\Entity\Product;
 use App\Exception\IncorrectProductDateSoldAndScheduleStrategyUsageLogicException;
 use DateTime;
+use DateTimeImmutable;
 
 final class DecemberYearlyScheduleStrategy implements PaymentScheduleStrategyInterface
 {
@@ -28,15 +29,15 @@ final class DecemberYearlyScheduleStrategy implements PaymentScheduleStrategyInt
         $baseInstallmentAmount = (int) floor($totalPrice / self::NUMBER_OF_INSTALMENTS);
         $lastInstallmentAmount = $totalPrice - ($baseInstallmentAmount * (self::NUMBER_OF_INSTALMENTS - 1));
 
-        $baseInstallment = new Money($baseInstallmentAmount, $product->getPrice()->getCurrency());
-        $lastInstallment = new Money($lastInstallmentAmount, $product->getPrice()->getCurrency());
+        $baseInstallment = new Money($baseInstallmentAmount, $product->getPrice()->getCurrency()->value);
+        $lastInstallment = new Money($lastInstallmentAmount, $product->getPrice()->getCurrency()->value);
 
         for ($i = 0; $i < self::NUMBER_OF_INSTALMENTS - 1; $i++) {
-            $paymentScheduleItem = new PaymentScheduleItem($baseInstallment, new DateTime("+{$i} months"));
+            $paymentScheduleItem = new PaymentScheduleItem($baseInstallment, new DateTimeImmutable("+{$i} months"));
             $paymentSchedule->addPaymentScheduleItem($paymentScheduleItem);
         }
 
-        $lastPaymentScheduleItem = new PaymentScheduleItem($lastInstallment, new DateTime("+11 months"));
+        $lastPaymentScheduleItem = new PaymentScheduleItem($lastInstallment, new DateTimeImmutable("+11 months"));
         $paymentSchedule->addPaymentScheduleItem($lastPaymentScheduleItem);
 
         return $paymentSchedule;

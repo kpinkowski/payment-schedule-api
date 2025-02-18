@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Dto\CalculatePaymentScheduleDto;
-use App\Entity\Product;
-use App\Factory\CalculatePaymentScheduleCommandFactory;
-use App\Messenger\Command\CalculatePaymentScheduleCommand;
+use App\Dto\CalculatePaymentScheduleRequest;
 use App\Messenger\Query\GetPaymentScheduleQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,16 +24,18 @@ final class ScheduleController
     use HandleTrait;
 
     public function __construct(
-        private readonly MessageBusInterface $commandBus,
         private readonly EntityManagerInterface $entityManager,
         private readonly ValidatorInterface $validator,
         private readonly SerializerInterface $serializer,
-    ) {}
+        MessageBusInterface $bus
+    ) {
+        $this->messageBus = $bus;
+    }
 
     #[Route('/generate', name: 'api_generate_schedule', methods: ['POST'])]
     public function generate(Request $request): JsonResponse
     {
-        $dto = $this->serializer->deserialize($request->getContent(), CalculatePaymentScheduleDto::class, 'json');
+        $dto = $this->serializer->deserialize($request->getContent(), CalculatePaymentScheduleRequest::class, 'json');
 
         $errors = $this->validator->validate($dto);
 
@@ -44,23 +43,24 @@ final class ScheduleController
             return new JsonResponse(['error' => (string) $errors], Response::HTTP_BAD_REQUEST);
         }
 
-        $product = $this->entityManager->getRepository(Product::class)->find($dto->productId);
+        $schedule = $this->handle($dto->toCommand());
 
-        if (!$product) {
-            return new JsonResponse(['error' => 'Product not found'], Response::HTTP_BAD_REQUEST);
-        }
-
-        $this->commandBus->dispatch($dto->toCommand());
-
-        // TODO: Return the generated schedule ID in headers
-        return new JsonResponse(['message' => 'Payment schedule generated'], Response::HTTP_CREATED);
+        return new JsonResponse(
+            null,
+            Response::HTTP_CREATED,
+            ['Location' => "/api/v1/schedule/{$schedule->getId()}"]
+        );
     }
 
-    #[Route('/{$paymentScheduleId}', name: 'api_get_schedule', methods: ['GET'])]
+    #[Route('/{paymentScheduleId}', name: 'api_get_schedule', methods: ['GET'])]
     public function getSchedule(int $paymentScheduleId): JsonResponse
     {
-        $schedules = $this->handle(new GetPaymentScheduleQuery($paymentScheduleId));
+        try {
+            $schedule = $this->handle(new GetPaymentScheduleQuery($paymentScheduleId));
 
-        return new JsonResponse($schedules);
+            return new JsonResponse($schedule);
+        } catch (\Throwable $th) {
+            return new JsonResponse([], Response::HTTP_NOT_FOUND);
+        }
     }
 }
