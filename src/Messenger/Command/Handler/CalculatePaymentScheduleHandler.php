@@ -8,7 +8,6 @@ use App\Entity\PaymentSchedule;
 use App\Factory\ProductFactory;
 use App\Messenger\Command\CalculatePaymentScheduleCommand;
 use App\Service\PaymentScheduleCalculator;
-use App\Service\TimezoneConverter;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;

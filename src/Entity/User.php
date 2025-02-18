@@ -7,11 +7,12 @@ namespace App\Entity;
 namespace App\Entity;
 
 use App\Enum\UserRole;
+use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: "users")]
 final class User implements UserInterface, PasswordAuthenticatedUserInterface
 {

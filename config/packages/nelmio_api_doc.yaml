@@ -1,9 +1,19 @@
 nelmio_api_doc:
     documentation:
+        use_validation_groups: true
         info:
-            title: My App
-            description: This is an awesome app!
+            title: PaymentSchedule API
+            description: PaymentSchedule API
             version: 1.0.0
-    areas: # to filter documented areas
+        components:
+            securitySchemes:
+                BearerAuth:
+                    type: http
+                    scheme: bearer
+                    bearerFormat: JWT
+        security:
+            -   BearerAuth: [ ]
+    areas:
         path_patterns:
-            - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
+            - ^/api
+            - ^/login

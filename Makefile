@@ -81,3 +81,8 @@ generate-keys:
 
 load-fixtures:
 	@$(SYMFONY) doctrine:fixtures:load --no-interaction
+
+setup-database:
+	@$(SYMFONY) doctrine:database:drop --force --if-exists
+	@$(SYMFONY) doctrine:database:create
+	@$(SYMFONY) doctrine:migrations:migrate --no-interaction
