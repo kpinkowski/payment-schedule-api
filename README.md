@@ -1,4 +1,4 @@
-# Recruitment Task for TravelPlanet
+# Payment Schedule Generator
 ## Requirements
 - Docker Compose v2.10+
 - OpenSSL
