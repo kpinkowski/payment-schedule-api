@@ -1,0 +1,29 @@
+monolog:
+    channels:
+        - performance
+        - app
+        - httpRequest
+
+    handlers:
+        main:
+            type: stream
+            path: "%kernel.logs_dir%/%kernel.environment%.log"
+            level: debug
+            
+        app:
+            type: stream
+            path: "%kernel.logs_dir%/app.log"
+            level: info
+            channels: ["app"]
+            
+        performance:
+            type: stream
+            path: "%kernel.logs_dir%/performance.log"
+            level: info
+            channels: ["performance"]
+        
+        httpRequest:
+            type: stream
+            path: "%kernel.logs_dir%/request.log"
+            level: info
+            channels: ["httpRequest"]

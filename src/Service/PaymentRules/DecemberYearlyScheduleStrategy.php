@@ -9,7 +9,6 @@ use App\Entity\PaymentSchedule;
 use App\Entity\PaymentScheduleItem;
 use App\Entity\Product;
 use App\Exception\IncorrectProductDateSoldAndScheduleStrategyUsageLogicException;
-use DateTime;
 use DateTimeImmutable;
 
 final class DecemberYearlyScheduleStrategy implements PaymentScheduleStrategyInterface

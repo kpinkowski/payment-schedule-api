@@ -18,14 +18,13 @@ final class PaymentScheduleCalculator
     private const LOG_TAG = '[PaymentScheduleCalculator]: ';
     private const GENERATING_LOG = self::LOG_TAG . 'Generating schedule...';
     private const GENERATED_LOG = self::LOG_TAG . 'Generated schedule.';
-    private const ERROR_LOG = self::LOG_TAG . 'Error generating schedule.';
 
     public function __construct(
         private readonly StandardPaymentScheduleStrategy $standardPaymentScheduleStrategy,
         private readonly JanuaryTwoEqualScheduleStrategy $januaryTwoEqualScheduleStrategy,
         private readonly JunePaymentScheduleStrategy $junePaymentScheduleStrategy,
         private readonly DecemberYearlyScheduleStrategy $decemberYearlyScheduleStrategy,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $appLogger
     ) {
     }
 
@@ -33,7 +32,7 @@ final class PaymentScheduleCalculator
     {
         $strategy = $this->getStrategy($product);
 
-        $this->logger->debug(self::GENERATING_LOG, [
+        $this->appLogger->info(self::GENERATING_LOG, [
             'productType' => $product->getProductType()->value,
             'productName' => $product->getName(),
             'productPriceAmount' => $product->getPrice()->getAmount(),
@@ -44,12 +43,13 @@ final class PaymentScheduleCalculator
 
         $schedule = $strategy->generateSchedule($product);
 
-        $this->logger->debug(self::GENERATED_LOG, [
+        $this->appLogger->info(self::GENERATED_LOG, [
             'productType' => $product->getProductType()->value,
             'productName' => $product->getName(),
             'productPriceAmount' => $product->getPrice()->getAmount(),
             'productPriceCurrency' => $product->getPrice()->getCurrency(),
             'dateSold' => $product->getDateSold()->format('Y-m-d'),
+            'strategy' => get_class($strategy),
             'scheduleId' => $schedule->getId()
         ]);
 

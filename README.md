@@ -1,11 +1,14 @@
 # Recruitment Task for TravelPlanet
 ## Requirements
 - Docker Compose v2.10+
+- OpenSSL
 
 ## Installation
 1. Run `docker compose build --no-cache` 
 2. Run `docker compose up --pull always -d --wait`
 3. Open `https://localhost` in your favorite web browser and [accept the auto-generated TLS certificate](https://stackoverflow.com/a/15076602/1352334)
+4. Generate keys for JWT authentication by running `make generate-keys`
+5. Run `make load-fixtures` to load User fixture
 
 ## URLS
 - [https://localhost](https://localhost) - Symfony app
@@ -14,15 +17,23 @@
 ## Running tests
 - `make unit-tests` - Run unit tests
 - `make setup-tests && make integration-tests` - Run integration tests
+- `make setup-tests && make application-tests` - Run application tests
 
-## Architecture Decision Log
-- The docker setup is based on Kévin Dunglas's [Symfony docker](https://github.com/dunglas/symfony-docker).
-- The whole REST API is based on API Platform.
-- Products and ProductTypes are fully managed by the API Platform OOTB and are stored in database - you need to create some to be able to generate a PaymentSchedule.
-- The CQRS pattern is implemented and integrated with symfony/messenger to handle commands and queries synchronously or asynchronously on separate buses.
-- Money should be received, stored and returned as an integer to avoid floating-point precision issues.
-- Integration tests setup is using separate test database and has rollback mechanism to keep the database clean.
-- If the amount cannot be divided into equal parts, the last instalment will be the remaining amount.
+## Usage
+- `POST /login` - Generate JWT token. Use default credentials: 
+```
+{
+    "email": "admin@example.com",
+    "password": "password"
+}
+```
+- Use the generated token in the `Authorization` header in the following format:
+```
+Authorization: Bearer {token}
+```
+- `POST /api/v1/schedule/generate` - Generates a payment schedule. See [Swagger/OpenAPI UI](https://localhost/api) for more details.
+    Generated schedule URI is returned in Location header of the response.
+- `GET /api/v1/schedule/{scheduleId}` - Retrieves a payment schedule by ID. URI to gene scheu of previous request. See [Swagger/OpenAPI UI](https://localhost/api) for more details.
 
 ## Logic
 
@@ -34,3 +45,12 @@ The first instalment is 30% of the total amount and the second payment is the re
 - `JanuaryTwoEqualPaymentsScheduleStrategy` - Generates a payment schedule with two payments.
 
 If the amount cannot be divided into equal parts, the last instalment will be the remaining amount.
+
+## Metrics and logs
+- Every request time is logged in `var/log/performance.log`
+- Every request is logged in `var/log/request.log`
+- Application logs are available in `var.log/app.log`
+- Application logs are available in `var.log/app.log`
+- General logs are available in `var/log/dev.log`
+- Metrics for prometheus are available at [https://localhost/metrics/prometheus](https://localhost/metrics/prometheus)
+- Health check is available at [https://localhost/monitor/health](https://localhost/monitor/health)

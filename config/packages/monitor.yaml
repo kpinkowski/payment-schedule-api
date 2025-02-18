@@ -1,0 +1,6 @@
+liip_monitor:
+    enable_controller: true
+    checks:
+        doctrine_dbal: [default]
+        symfony_version: ~
+

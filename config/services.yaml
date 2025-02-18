@@ -4,12 +4,19 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    app.response_time_warning: '%env(int:RESPONSE_TIME_WARNING_THRESHOLD)%'
+    app.response_time_critical: '%env(int:RESPONSE_TIME_ERROR_THRESHOLD)%'
+
 
 services:
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            $appLogger: '@monolog.logger.app'
+            $performanceLogger: '@monolog.logger.performance'
+            $httpRequestLogger: '@monolog.logger.httpRequestLogger'
 
     App\Controller\:
         resource: '../src/Controller'
@@ -24,6 +31,30 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+    
+    App\EventListener\ResponseTimeListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.response }
+    
+    App\EventListener\RequestLoggerListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    monolog.logger.app:
+        class: Monolog\Logger
+        arguments:
+            - 'app'
+            - [ '@monolog.handler.app' ]
+
+    monolog.logger.performance:
+        class: Monolog\Logger
+        arguments:
+            - 'performance'
+            - [ '@monolog.handler.performance' ]
+    
+    monolog.logger.httpRequestLogger:
+        class: Monolog\Logger
+        arguments:
+            - 'request'
+            - [ '@monolog.handler.httpRequest' ]
