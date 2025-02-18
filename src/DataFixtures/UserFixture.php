@@ -12,18 +12,19 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 final class UserFixture extends Fixture
 {
+    public const ADMIN_EMAIL = 'admin@example.com';
+    public const ADMIN_PASSWORD = 'password';
+
     public function __construct(private UserPasswordHasherInterface $passwordHasher) {}
 
     public function load(ObjectManager $manager): void
     {
-        $plainPassword = 'password';
-
         $user = new User(
-            'admin@example.com',
+            self::ADMIN_EMAIL,
             [UserRole::ADMIN]
         );
 
-        $hashedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);
+        $hashedPassword = $this->passwordHasher->hashPassword($user, self::ADMIN_PASSWORD);
         $user->setPassword($hashedPassword);
 
         $manager->persist($user);

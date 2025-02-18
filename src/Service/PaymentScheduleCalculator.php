@@ -6,8 +6,9 @@ namespace App\Service;
 
 use App\Entity\PaymentSchedule;
 use App\Entity\Product;
+use App\Enum\ProductType;
 use App\Service\PaymentRules\DecemberYearlyScheduleStrategy;
-use App\Service\PaymentRules\JanuaryTwoEqualScheduleStrategy;
+use App\Service\PaymentRules\CarProductTypeTwoEqualScheduleStrategy;
 use App\Service\PaymentRules\JunePaymentScheduleStrategy;
 use App\Service\PaymentRules\PaymentScheduleStrategyInterface;
 use App\Service\PaymentRules\StandardPaymentScheduleStrategy;
@@ -21,7 +22,7 @@ final class PaymentScheduleCalculator
 
     public function __construct(
         private readonly StandardPaymentScheduleStrategy $standardPaymentScheduleStrategy,
-        private readonly JanuaryTwoEqualScheduleStrategy $januaryTwoEqualScheduleStrategy,
+        private readonly CarProductTypeTwoEqualScheduleStrategy $carProductTypeTwoEqualScheduleStrategy,
         private readonly JunePaymentScheduleStrategy $junePaymentScheduleStrategy,
         private readonly DecemberYearlyScheduleStrategy $decemberYearlyScheduleStrategy,
         private readonly LoggerInterface $appLogger
@@ -58,8 +59,8 @@ final class PaymentScheduleCalculator
 
     private function getStrategy(Product $product): PaymentScheduleStrategyInterface
     {
-        if ($product->getDateSold()->format('m') === '01') {
-            return $this->januaryTwoEqualScheduleStrategy;
+        if ($product->getProductType() === ProductType::CARS) {
+            return $this->carProductTypeTwoEqualScheduleStrategy;
         }
 
         if ($product->getDateSold()->format('m') === '06') {

@@ -6,13 +6,14 @@ namespace App\Tests\Application\Controller;
 
 use App\Enum\Currency;
 use App\Enum\ProductType;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Tests\Common\TestCase\ApiTestCase;
 
-final class ScheduleControllerTest extends WebTestCase
+final class ScheduleControllerTest extends ApiTestCase
 {
     public function testItGeneratesAndFetchesPaymentSchedule(): void
     {
-        $client = static::createClient();
+        $token = $this->getToken();
+        $authHeader = ['HTTP_AUTHORIZATION' => "Bearer $token"];
 
         $payload = [
             'productName' => 'someProduct',
@@ -24,12 +25,12 @@ final class ScheduleControllerTest extends WebTestCase
             'productType' => ProductType::ELECTRONICS->value
         ];
 
-        $client->request(
+        $this->client->request(
             'POST',
             '/api/v1/schedule/generate',
             [],
             [],
-            [],
+            $authHeader,
             json_encode($payload)
         );
 
@@ -37,16 +38,16 @@ final class ScheduleControllerTest extends WebTestCase
         self::assertResponseHeaderSame('content-type', 'application/json');
         self::assertResponseHasHeader('Location');
 
-        $scheduleUrl = $client->getResponse()->headers->get('Location');
+        $scheduleUrl = $this->client->getResponse()->headers->get('Location');
 
         self::assertNotNull($scheduleUrl, 'Location header should contain the schedule URL');
 
-        $client->request('GET', $scheduleUrl);
+        $this->client->request('GET', $scheduleUrl, [], [], $authHeader);
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('content-type', 'application/json');
 
         $responseData = json_decode(
-            $client->getResponse()->getContent(),
+            $this->client->getResponse()->getContent(),
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -67,9 +68,9 @@ final class ScheduleControllerTest extends WebTestCase
 
     public function testItReturns404CodeWhenScheduleIsNotFound(): void
     {
-        $client = static::createClient();
+        $authHeader = ['HTTP_AUTHORIZATION' => 'Bearer ' . $this->getToken()];
 
-        $client->request('GET', 'http://localhost/api/v1/schedule/999999');
+        $this->client->request('GET', 'http://localhost/api/v1/schedule/999999', [], [], $authHeader);
 
         self::assertResponseStatusCodeSame(404);
     }

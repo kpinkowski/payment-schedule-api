@@ -8,15 +8,16 @@ use App\Entity\Money;
 use App\Entity\PaymentSchedule;
 use App\Entity\PaymentScheduleItem;
 use App\Entity\Product;
-use App\Exception\IncorrectProductDateSoldAndScheduleStrategyUsageLogicException;
+use App\Enum\ProductType;
+use App\Exception\IncorrectProductTypeAndScheduleStrategyUsageLogicException;
 use DateTimeImmutable;
 
-final class JanuaryTwoEqualScheduleStrategy implements PaymentScheduleStrategyInterface
+final class CarProductTypeTwoEqualScheduleStrategy implements PaymentScheduleStrategyInterface
 {
     public function generateSchedule(Product $product): PaymentSchedule
     {
-        if ($product->getDateSold()->format('m') !== '01') {
-            throw new IncorrectProductDateSoldAndScheduleStrategyUsageLogicException();
+        if ($product->getProductType() !== ProductType::CARS) {
+            throw new IncorrectProductTypeAndScheduleStrategyUsageLogicException();
         }
 
         $paymentSchedule = new PaymentSchedule();
