@@ -62,5 +62,6 @@ If the amount cannot be divided into equal parts, the last instalment will be th
 - Every request is logged in `var/log/request.log`
 - Application logs are available in `var/log/app.log`
 - General logs are available in `var/log/dev.log`
+- Log files can be accessed inside the container - `make bash` and then `-ls -la var/log`
 - Metrics for prometheus are available at [https://localhost/metrics/prometheus](https://localhost/metrics/prometheus)
 - Health check is available at [https://localhost/monitor/health](https://localhost/monitor/health)
