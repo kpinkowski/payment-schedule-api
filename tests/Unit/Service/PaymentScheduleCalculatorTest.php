@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Service;
 
+use App\Entity\Money;
 use App\Entity\Product;
+use App\Enum\Currency;
+use App\Enum\ProductType;
 use App\Service\PaymentRules\DecemberYearlyScheduleStrategy;
 use App\Service\PaymentRules\JanuaryTwoEqualScheduleStrategy;
 use App\Service\PaymentRules\JunePaymentScheduleStrategy;
 use App\Service\PaymentRules\StandardPaymentScheduleStrategy;
 use App\Service\PaymentScheduleCalculator;
 use App\Tests\Common\TestCase\UnitTestCase;
-use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -30,7 +33,6 @@ final class PaymentScheduleCalculatorTest extends UnitTestCase
     {
         parent::setUp();
 
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
         $this->standardPaymentScheduleStrategy = $this->createMock(StandardPaymentScheduleStrategy::class);
         $this->januaryTwoEqualScheduleStrategy = $this->createMock(JanuaryTwoEqualScheduleStrategy::class);
         $this->junePaymentScheduleStrategy = $this->createMock(JunePaymentScheduleStrategy::class);
@@ -38,7 +40,6 @@ final class PaymentScheduleCalculatorTest extends UnitTestCase
         $this->logger = $this->createMock(LoggerInterface::class);
 
         $this->calculator = new PaymentScheduleCalculator(
-            $this->entityManager,
             $this->standardPaymentScheduleStrategy,
             $this->januaryTwoEqualScheduleStrategy,
             $this->junePaymentScheduleStrategy,
@@ -49,49 +50,61 @@ final class PaymentScheduleCalculatorTest extends UnitTestCase
 
     public function testItDoesChooseJanuaryTwoEqualPaymentScheduleStrategy(): void
     {
+        $dateSold = new DateTimeImmutable('2024-01-01');
         $product = $this->createMock(Product::class);
-        $dateSold = new DateTime('2024-01-01');
+        $product->method('getDateSold')->willReturn($dateSold);
+        $product->method('getPrice')->willReturn(new Money(1000, Currency::USD));
+        $product->method('getProductType')->willReturn(ProductType::ELECTRONICS);
 
         $this->januaryTwoEqualScheduleStrategy->expects($this->once())
             ->method('generateSchedule')
-            ->with($product, $dateSold);
+            ->with($product);
 
-        $this->calculator->calculate($product, $dateSold);
+        $this->calculator->calculate($product);
     }
 
     public function testItDoesChooseJunePaymentScheduleStrategy(): void
     {
+        $dateSold = new DateTimeImmutable('2024-06-01');
         $product = $this->createMock(Product::class);
-        $dateSold = new DateTime('2024-06-01');
+        $product->method('getDateSold')->willReturn($dateSold);
+        $product->method('getPrice')->willReturn(new Money(1000, Currency::USD));
+        $product->method('getProductType')->willReturn(ProductType::ELECTRONICS);
 
         $this->junePaymentScheduleStrategy->expects($this->once())
             ->method('generateSchedule')
-            ->with($product, $dateSold);
+            ->with($product);
 
-        $this->calculator->calculate($product, $dateSold);
+        $this->calculator->calculate($product);
     }
 
     public function testItDoesChooseDecemberYearlyPaymentScheduleStrategy(): void
     {
+        $dateSold = new DateTimeImmutable('2024-12-01');
         $product = $this->createMock(Product::class);
-        $dateSold = new DateTime('2024-12-01');
+        $product->method('getDateSold')->willReturn($dateSold);
+        $product->method('getPrice')->willReturn(new Money(1000, Currency::USD));
+        $product->method('getProductType')->willReturn(ProductType::ELECTRONICS);
 
         $this->decemberYearlyScheduleStrategy->expects($this->once())
             ->method('generateSchedule')
-            ->with($product, $dateSold);
+            ->with($product);
 
-        $this->calculator->calculate($product, $dateSold);
+        $this->calculator->calculate($product);
     }
 
     public function testItDoesChooseStandardPaymentScheduleStrategy(): void
     {
+        $dateSold = new DateTimeImmutable('2024-05-01');
         $product = $this->createMock(Product::class);
-        $dateSold = new DateTime('2024-05-01');
+        $product->method('getDateSold')->willReturn($dateSold);
+        $product->method('getPrice')->willReturn(new Money(1000, Currency::USD));
+        $product->method('getProductType')->willReturn(ProductType::ELECTRONICS);
 
         $this->standardPaymentScheduleStrategy->expects($this->once())
             ->method('generateSchedule')
-            ->with($product, $dateSold);
+            ->with($product);
 
-        $this->calculator->calculate($product, $dateSold);
+        $this->calculator->calculate($product);
     }
 }

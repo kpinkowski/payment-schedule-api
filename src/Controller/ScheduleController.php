@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Api\Request\Dto\GenerateScheduleRequest;
+use App\Dto\CalculatePaymentScheduleDto;
 use App\Entity\Product;
+use App\Factory\CalculatePaymentScheduleCommandFactory;
 use App\Messenger\Command\CalculatePaymentScheduleCommand;
 use App\Messenger\Query\GetPaymentScheduleQuery;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,7 +36,7 @@ final class ScheduleController
     #[Route('/generate', name: 'api_generate_schedule', methods: ['POST'])]
     public function generate(Request $request): JsonResponse
     {
-        $dto = $this->serializer->deserialize($request->getContent(), GenerateScheduleRequest::class, 'json');
+        $dto = $this->serializer->deserialize($request->getContent(), CalculatePaymentScheduleDto::class, 'json');
 
         $errors = $this->validator->validate($dto);
 
@@ -49,12 +50,13 @@ final class ScheduleController
             return new JsonResponse(['error' => 'Product not found'], Response::HTTP_BAD_REQUEST);
         }
 
-        $this->commandBus->dispatch(new CalculatePaymentScheduleCommand($product));
+        $this->commandBus->dispatch($dto->toCommand());
 
-        return new JsonResponse(['message' => 'Payment schedule generated']);
+        // TODO: Return the generated schedule ID in headers
+        return new JsonResponse(['message' => 'Payment schedule generated'], Response::HTTP_CREATED);
     }
 
-    #[Route('/{productId}', name: 'api_get_schedule', methods: ['GET'])]
+    #[Route('/{$paymentScheduleId}', name: 'api_get_schedule', methods: ['GET'])]
     public function getSchedule(int $paymentScheduleId): JsonResponse
     {
         $schedules = $this->handle(new GetPaymentScheduleQuery($paymentScheduleId));

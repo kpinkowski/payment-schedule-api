@@ -9,16 +9,15 @@ use App\Entity\PaymentSchedule;
 use App\Entity\PaymentScheduleItem;
 use App\Entity\Product;
 use App\Exception\IncorrectProductDateSoldAndScheduleStrategyUsageLogicException;
-use DateTimeInterface;
 use DateTime;
 
 final class DecemberYearlyScheduleStrategy implements PaymentScheduleStrategyInterface
 {
     private const NUMBER_OF_INSTALMENTS = 12;
 
-    public function generateSchedule(Product $product, DateTimeInterface $dateSold): PaymentSchedule
+    public function generateSchedule(Product $product): PaymentSchedule
     {
-        if ($dateSold->format('m') !== '12') {
+        if ($product->getDateSold()->format('m') !== '12') {
             throw new IncorrectProductDateSoldAndScheduleStrategyUsageLogicException();
         }
 

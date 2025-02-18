@@ -37,29 +37,6 @@ final class PaymentScheduleAssertObject
         return $this;
     }
 
-    public function hasSameTotalAmountAsProduct(Product $product): self
-    {
-        Assert::assertSame(
-            $product->getPrice()->getAmount(),
-            $this->paymentSchedule->getTotalAmount()->getAmount(),
-            self::INVALID_TOTAL_AMOUNT
-        );
-
-        $instalmentsTotal = 0;
-
-        foreach ($this->paymentSchedule->getPaymentScheduleItems() as $paymentScheduleItem) {
-            $instalmentsTotal += $paymentScheduleItem->getAmount()->getAmount();
-        }
-
-        Assert::assertSame(
-            $product->getPrice()->getAmount(),
-            $instalmentsTotal,
-            self::INVALID_TOTAL_AMOUNT
-        );
-
-        return $this;
-    }
-
     public function hasProduct(Product $product): self
     {
         Assert::assertSame(

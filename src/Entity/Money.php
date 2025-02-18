@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Enum\Currency;
+use App\Exception\AmountCannotBeNegativeException;
 use Doctrine\ORM\Mapping as ORM;
-use InvalidArgumentException;
 
 #[ORM\Embeddable]
 class Money
@@ -16,14 +17,14 @@ class Money
     #[ORM\Column(type: "string", length: 3)]
     private string $currency;
 
-    public function __construct(int $amount, string $currency)
+    public function __construct(int $amount, Currency $currency)
     {
         if ($amount < 0) {
-            throw new InvalidArgumentException("Amount cannot be negative.");
+            throw new AmountCannotBeNegativeException();
         }
 
         $this->amount = $amount;
-        $this->currency = strtoupper($currency);
+        $this->currency = strtoupper($currency->value);
     }
 
     public function getAmount(): int
@@ -31,8 +32,8 @@ class Money
         return $this->amount;
     }
 
-    public function getCurrency(): string
+    public function getCurrency(): Currency
     {
-        return $this->currency;
+        return Currency::from($this->currency);
     }
 }

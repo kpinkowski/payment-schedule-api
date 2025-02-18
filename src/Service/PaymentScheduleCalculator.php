@@ -11,10 +11,7 @@ use App\Service\PaymentRules\JanuaryTwoEqualScheduleStrategy;
 use App\Service\PaymentRules\JunePaymentScheduleStrategy;
 use App\Service\PaymentRules\PaymentScheduleStrategyInterface;
 use App\Service\PaymentRules\StandardPaymentScheduleStrategy;
-use Doctrine\ORM\EntityManagerInterface;
-use DateTimeInterface;
 use Psr\Log\LoggerInterface;
-use Throwable;
 
 final class PaymentScheduleCalculator
 {
@@ -24,7 +21,6 @@ final class PaymentScheduleCalculator
     private const ERROR_LOG = self::LOG_TAG . 'Error generating schedule.';
 
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
         private readonly StandardPaymentScheduleStrategy $standardPaymentScheduleStrategy,
         private readonly JanuaryTwoEqualScheduleStrategy $januaryTwoEqualScheduleStrategy,
         private readonly JunePaymentScheduleStrategy $junePaymentScheduleStrategy,
@@ -33,57 +29,44 @@ final class PaymentScheduleCalculator
     ) {
     }
 
-    public function calculate(Product $product, DateTimeInterface $dateSold): PaymentSchedule
+    public function calculate(Product $product): PaymentSchedule
     {
-        try {
-            $this->entityManager->beginTransaction();
+        $strategy = $this->getStrategy($product);
 
-            $strategy = $this->getStrategy($dateSold);
+        $this->logger->debug(self::GENERATING_LOG, [
+            'productType' => $product->getProductType()->value,
+            'productName' => $product->getName(),
+            'productPriceAmount' => $product->getPrice()->getAmount(),
+            'productPriceCurrency' => $product->getPrice()->getCurrency(),
+            'dateSold' => $product->getDateSold()->format('Y-m-d'),
+            'strategy' => get_class($strategy)
+        ]);
 
-            $this->logger->debug(self::GENERATING_LOG, [
-                'productId' => $product->getId(),
-                'dateSold' => $dateSold->format('Y-m-d'),
-                'strategy' => get_class($strategy)
-            ]);
+        $schedule = $strategy->generateSchedule($product);
 
-            $schedule = $strategy->generateSchedule($product, $dateSold);
+        $this->logger->debug(self::GENERATED_LOG, [
+            'productType' => $product->getProductType()->value,
+            'productName' => $product->getName(),
+            'productPriceAmount' => $product->getPrice()->getAmount(),
+            'productPriceCurrency' => $product->getPrice()->getCurrency(),
+            'dateSold' => $product->getDateSold()->format('Y-m-d'),
+            'scheduleId' => $schedule->getId()
+        ]);
 
-            $this->entityManager->persist($schedule);
-            $this->entityManager->flush();
-            $this->entityManager->commit();
-
-            $this->logger->debug(self::GENERATED_LOG, [
-                'productId' => $product->getId(),
-                'dateSold' => $dateSold->format('Y-m-d'),
-                'scheduleId' => $schedule->getId()
-            ]);
-
-            return $schedule;
-        } catch (Throwable $e) {
-            $this->entityManager->rollback();
-
-            $this->logger->error(self::ERROR_LOG, [
-                'productId' => $product->getId(),
-                'dateSold' => $dateSold->format('Y-m-d'),
-                'strategy' => (isset($strategy) ? get_class($strategy) : null),
-                'error' => $e->getMessage()
-            ]);
-
-            throw $e;
-        }
+        return $schedule;
     }
 
-    private function getStrategy(DateTimeInterface $dateSold): PaymentScheduleStrategyInterface
+    private function getStrategy(Product $product): PaymentScheduleStrategyInterface
     {
-        if ($dateSold->format('m') === '01') {
+        if ($product->getDateSold()->format('m') === '01') {
             return $this->januaryTwoEqualScheduleStrategy;
         }
 
-        if ($dateSold->format('m') === '06') {
+        if ($product->getDateSold()->format('m') === '06') {
             return $this->junePaymentScheduleStrategy;
         }
 
-        if ($dateSold->format('m') === '12') {
+        if ($product->getDateSold()->format('m') === '12') {
             return $this->decemberYearlyScheduleStrategy;
         }
 

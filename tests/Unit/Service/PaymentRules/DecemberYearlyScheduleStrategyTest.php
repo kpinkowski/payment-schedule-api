@@ -6,12 +6,12 @@ namespace App\Tests\Unit\Service\PaymentRules;
 
 use App\Entity\Money;
 use App\Entity\Product;
+use App\Enum\Currency;
 use App\Exception\IncorrectProductDateSoldAndScheduleStrategyUsageLogicException;
 use App\Service\PaymentRules\DecemberYearlyScheduleStrategy;
 use App\Tests\Common\AssertObject\PaymentScheduleAssertObject;
 use App\Tests\Common\TestCase\UnitTestCase;
-use DateTime;
-use DateTimeInterface;
+use DateTimeImmutable;
 
 final class DecemberYearlyScheduleStrategyTest extends UnitTestCase
 {
@@ -31,17 +31,17 @@ final class DecemberYearlyScheduleStrategyTest extends UnitTestCase
         int $amount,
         int $expectedInstalmentAmount,
         int $expectedLastInstalmentAmount,
-        DateTimeInterface $dateSold
+        DateTimeImmutable $dateSold
     ): void {
-        $money = new Money($amount, 'USD');
+        $money = new Money($amount, Currency::USD);
         $product = $this->createMock(Product::class);
         $product->method('getPrice')->willReturn($money);
+        $product->method('getDateSold')->willReturn($dateSold);
 
-        $schedule = $this->strategy->generateSchedule($product, $dateSold);
+        $schedule = $this->strategy->generateSchedule($product);
 
         PaymentScheduleAssertObject::assertThat($schedule)
             ->hasProduct($product)
-            ->hasSameTotalAmountAsProduct($product)
             ->hasInstalmentsNumberEqualTo(12)
             ->installmentIsEqualTo(11, $expectedLastInstalmentAmount);
 
@@ -52,18 +52,19 @@ final class DecemberYearlyScheduleStrategyTest extends UnitTestCase
 
     public function testItThrowsExceptionWhenDateSoldIsWrong(): void
     {
+        $dateSold = new DateTimeImmutable('2024-01-01');
         $product = $this->createMock(Product::class);
-        $dateSold = new DateTime('2024-01-01');
+        $product->method('getDateSold')->willReturn($dateSold);
 
         $this->expectException(IncorrectProductDateSoldAndScheduleStrategyUsageLogicException::class);
-        $this->strategy->generateSchedule($product, $dateSold);
+        $this->strategy->generateSchedule($product);
     }
 
     public function correctProductDataProvider(): array
     {
         return [
-            [1200, 100, 100, new DateTime('2024-12-01')],
-            [6293, 524, 529, new DateTime('2024-12-01')],
+            [1200, 100, 100, new DateTimeImmutable('2024-12-01')],
+            [6293, 524, 529, new DateTimeImmutable('2024-12-01')],
         ];
     }
 }

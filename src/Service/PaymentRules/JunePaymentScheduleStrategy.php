@@ -9,15 +9,14 @@ use App\Entity\PaymentSchedule;
 use App\Entity\PaymentScheduleItem;
 use App\Entity\Product;
 use App\Exception\IncorrectProductDateSoldAndScheduleStrategyUsageLogicException;
-use DateTimeInterface;
 use DateTimeImmutable;
 use DateTime;
 
 final class JunePaymentScheduleStrategy implements PaymentScheduleStrategyInterface
 {
-    public function generateSchedule(Product $product, DateTimeInterface $dateSold): PaymentSchedule
+    public function generateSchedule(Product $product): PaymentSchedule
     {
-        if ($dateSold->format('m') !== '06') {
+        if ($product->getDateSold()->format('m') !== '06') {
             throw new IncorrectProductDateSoldAndScheduleStrategyUsageLogicException();
         }
 

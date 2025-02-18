@@ -4,24 +4,33 @@ declare(strict_types=1);
 
 namespace App\Messenger\Command;
 
-use App\Entity\Product;
+use App\Entity\Money;
+use App\Enum\ProductType;
 use DateTimeImmutable;
-use DateTimeInterface;
 
 final class CalculatePaymentScheduleCommand
 {
-    private DateTimeInterface $dateSold;
-
     public function __construct(
-        private readonly Product $product,
-        string $dateSold
+        private readonly ProductType $productType,
+        private readonly string $productName,
+        private readonly Money $productPrice,
+        private readonly DateTimeImmutable $dateSold,
     ) {
-        $this->dateSold = new DateTimeImmutable($dateSold);
     }
 
-    public function getProduct(): Product
+    public function getProductType(): ProductType
     {
-        return $this->product;
+        return $this->productType;
+    }
+
+    public function getProductName(): string
+    {
+        return $this->productName;
+    }
+
+    public function getProductPrice(): Money
+    {
+        return $this->productPrice;
     }
 
     public function getDateSold(): DateTimeImmutable

@@ -10,13 +10,12 @@ use App\Entity\PaymentScheduleItem;
 use App\Entity\Product;
 use App\Exception\IncorrectProductDateSoldAndScheduleStrategyUsageLogicException;
 use DateTime;
-use DateTimeInterface;
 
 final class JanuaryTwoEqualScheduleStrategy implements PaymentScheduleStrategyInterface
 {
-    public function generateSchedule(Product $product, DateTimeInterface $dateSold): PaymentSchedule
+    public function generateSchedule(Product $product): PaymentSchedule
     {
-        if ($dateSold->format('m') !== '01') {
+        if ($product->getDateSold()->format('m') !== '01') {
             throw new IncorrectProductDateSoldAndScheduleStrategyUsageLogicException();
         }
 

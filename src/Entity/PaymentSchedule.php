@@ -15,18 +15,15 @@ class PaymentSchedule
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Product $product = null;
-
     /**
      * @var Collection<int, PaymentScheduleItem>
      */
     #[ORM\OneToMany(targetEntity: PaymentScheduleItem::class, mappedBy: 'paymentSchedule', cascade: ['persist'], orphanRemoval: true)]
     private Collection $paymentScheduleItems;
 
-    #[ORM\Embedded(class: Money::class)]
-    private Money $totalAmount;
+    #[ORM\OneToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Product $product = null;
 
     public function __construct()
     {
@@ -36,19 +33,6 @@ class PaymentSchedule
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getProduct(): ?Product
-    {
-        return $this->product;
-    }
-
-    public function setProduct(Product $product): static
-    {
-        $this->product = $product;
-        $this->totalAmount = clone $product->getPrice();
-
-        return $this;
     }
 
     /**
@@ -81,8 +65,15 @@ class PaymentSchedule
         return $this;
     }
 
-    public function getTotalAmount(): Money
+    public function getProduct(): ?Product
     {
-        return $this->totalAmount;
+        return $this->product;
+    }
+
+    public function setProduct(?Product $product): static
+    {
+        $this->product = $product;
+
+        return $this;
     }
 }

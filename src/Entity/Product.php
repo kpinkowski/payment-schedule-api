@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
+use App\Enum\ProductType;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
+use DateTimeImmutable;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
@@ -16,49 +18,49 @@ class Product
     #[ORM\Column(length: 255)]
     private string $name;
 
+    #[ORM\Column]
+    private DateTimeImmutable $dateSold;
+
+    #[ORM\Column(length: 255)]
+    private string $productType;
+
     #[ORM\Embedded(class: Money::class)]
     private Money $price;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?ProductType $productType = null;
+    public function __construct(
+        string $name,
+        DateTimeImmutable $dateSold,
+        Money $price,
+        ProductType $productType
+    ) {
+        $this->name = $name;
+        $this->dateSold = $dateSold;
+        $this->productType = $productType->value;
+        $this->price = $price;
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function getDateSold(): DateTimeImmutable
     {
-        $this->name = $name;
-
-        return $this;
+        return $this->dateSold;
     }
 
-    public function getProductType(): ?ProductType
+    public function getProductType(): ProductType
     {
-        return $this->productType;
-    }
-
-    public function setProductType(?ProductType $productType): static
-    {
-        $this->productType = $productType;
-
-        return $this;
+        return ProductType::from($this->productType);
     }
 
     public function getPrice(): Money
     {
         return $this->price;
-    }
-
-    public function setPrice(Money $price): void
-    {
-        $this->price = $price;
     }
 }
