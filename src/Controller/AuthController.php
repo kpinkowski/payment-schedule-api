@@ -67,6 +67,10 @@ final class AuthController
 
         $token = $this->authService->getJWT($dto);
 
+        if ($token === null) {
+            return new JsonResponse(['error' => 'Invalid credentials'], Response::HTTP_BAD_REQUEST);
+        }
+
         return new JsonResponse(['token' => $token], Response::HTTP_OK);
     }
 }

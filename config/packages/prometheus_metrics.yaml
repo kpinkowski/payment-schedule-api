@@ -19,4 +19,3 @@ artprima_prometheus_metrics:
 when@test:
     artprima_prometheus_metrics:
         storage: in_memory
-

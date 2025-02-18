@@ -4,8 +4,8 @@
 - OpenSSL
 
 ## Installation
-1. Run `docker compose build --no-cache` 
-2. Run `docker compose up --pull always -d --wait`
+1. Run `make build` 
+2. Run `make up`
 3. Run `make setup-database`
 4. Open `https://localhost` in your favorite web browser and [accept the auto-generated TLS certificate](https://stackoverflow.com/a/15076602/1352334)
 5. Generate keys for JWT authentication by running `make generate-keys`
@@ -34,7 +34,7 @@
     ```
 - `POST /api/v1/schedule/generate` - Generates a payment schedule. See [Swagger/OpenAPI UI](https://localhost/api) for more details.
     Generated schedule URI is returned in Location header of the response.
-- `GET /api/v1/schedule/{scheduleId}` - Retrieves a payment schedule by ID. URI to gene scheu of previous request. See [Swagger/OpenAPI UI](https://localhost/api) for more details.
+- `GET /api/v1/schedule/{scheduleId}` - Retrieves a payment schedule by ID. See [Swagger/OpenAPI UI](https://localhost/api) for more details.
 
 ## Business logic
 
