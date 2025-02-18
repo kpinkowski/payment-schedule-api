@@ -28,7 +28,7 @@ final class CalculatePaymentScheduleRequest
 
     #[Assert\NotBlank]
     #[Assert\Type('string')]
-    #[Assert\Date]
+    #[Assert\DateTime(format: "Y-m-d\TH:i:sP", message: "Date has to be in ISO 8601 format.")]
     public string $productDateSold;
 
     public function toCommand(): CalculatePaymentScheduleCommand

@@ -8,6 +8,7 @@ use App\Entity\PaymentSchedule;
 use App\Factory\ProductFactory;
 use App\Messenger\Command\CalculatePaymentScheduleCommand;
 use App\Service\PaymentScheduleCalculator;
+use App\Service\TimezoneConverter;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -23,7 +24,7 @@ final class CalculatePaymentScheduleHandler
         private readonly EntityManagerInterface $entityManager,
         private readonly PaymentScheduleCalculator $calculator,
         private readonly ProductFactory $productFactory,
-        private readonly LoggerInterface $appLogger
+        private readonly LoggerInterface $appLogger,
     ) {
     }
 

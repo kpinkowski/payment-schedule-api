@@ -18,7 +18,7 @@ final class PaymentScheduleResponseFactory
             $items[] = new PaymentScheduleItemResponse(
                 $item->getAmount()->getAmount(),
                 $item->getAmount()->getCurrency()->value,
-                $item->getDueDate()->format('Y-m-d')
+                $item->getDueDate()->format('Y-m-d H:i:s')
             );
         }
 
