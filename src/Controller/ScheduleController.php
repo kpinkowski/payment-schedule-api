@@ -36,7 +36,7 @@ final class ScheduleController
 
     #[OA\Post(
         description: "Creates a new payment schedule based on the provided product data.",
-        summary: "Generate a new payment schedule",
+        summary: "Creates a new payment schedule",
         requestBody: new OA\RequestBody(
             required: true,
             content: new Model(type: CalculatePaymentScheduleRequest::class)
@@ -69,8 +69,8 @@ final class ScheduleController
             )
         ]
     )]
-    #[Route('/generate', name: 'api_generate_schedule', methods: ['POST'])]
-    public function generate(Request $request): JsonResponse
+    #[Route('', name: 'api_create_schedule', methods: ['POST'])]
+    public function create(Request $request): JsonResponse
     {
         $dto = $this->serializer->deserialize($request->getContent(), CalculatePaymentScheduleRequest::class, 'json');
 

@@ -32,7 +32,7 @@
     ```
     Authorization: Bearer {token}
     ```
-- `POST /api/v1/schedule/generate` - Generates a payment schedule. See [Swagger/OpenAPI UI](https://localhost/doc) for more details.
+- `POST /api/v1/schedule` - Generates a payment schedule. See [Swagger/OpenAPI UI](https://localhost/doc) for more details.
     Generated schedule URI is returned in Location header of the response.
 - `GET /api/v1/schedule/{scheduleId}` - Retrieves a payment schedule by ID. See [Swagger/OpenAPI UI](https://localhost/doc) for more details.
 

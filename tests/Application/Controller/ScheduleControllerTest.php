@@ -27,7 +27,7 @@ final class ScheduleControllerTest extends ApiTestCase
 
         $this->client->request(
             'POST',
-            '/api/v1/schedule/generate',
+            '/api/v1/schedule',
             [],
             [],
             $authHeader,
