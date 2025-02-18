@@ -6,7 +6,6 @@ namespace App\Entity;
 
 namespace App\Entity;
 
-use App\Enum\UserRole;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -30,7 +29,10 @@ final class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: "json")]
     private array $roles;
 
-    public function __construct(string $email, array $roles = [UserRole::USER])
+    /**
+     * @param string[] $roles
+     */
+    public function __construct(string $email, array $roles = [])
     {
         $this->email = $email;
         $this->roles = $roles;

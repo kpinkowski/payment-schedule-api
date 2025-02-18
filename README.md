@@ -7,9 +7,9 @@
 1. Run `docker compose build --no-cache` 
 2. Run `docker compose up --pull always -d --wait`
 3. Run `make setup-database`
-3. Open `https://localhost` in your favorite web browser and [accept the auto-generated TLS certificate](https://stackoverflow.com/a/15076602/1352334)
-4. Generate keys for JWT authentication by running `make generate-keys`
-5. Run `make load-fixtures` to load User fixture
+4. Open `https://localhost` in your favorite web browser and [accept the auto-generated TLS certificate](https://stackoverflow.com/a/15076602/1352334)
+5. Generate keys for JWT authentication by running `make generate-keys`
+6. Run `make load-fixtures` to load User fixture
 
 ## URLS
 - [https://localhost](https://localhost) - Symfony app
@@ -28,7 +28,7 @@
         "password": "password"
     }
     ```
-- Use the generated token in the `Authorization` header in the following format:
+- Use the generated JWT token in the `Authorization` header in the following format:
     ```
     Authorization: Bearer {token}
     ```

@@ -8,7 +8,6 @@ use App\Entity\Money;
 use App\Entity\Product;
 use App\Enum\Currency;
 use App\Enum\ProductType;
-use App\Exception\IncorrectProductDateSoldAndScheduleStrategyUsageLogicException;
 use App\Exception\IncorrectProductTypeAndScheduleStrategyUsageLogicException;
 use App\Service\PaymentRules\CarProductTypeTwoEqualScheduleStrategy;
 use App\Tests\Common\AssertObject\PaymentScheduleAssertObject;

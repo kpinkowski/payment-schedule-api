@@ -13,7 +13,6 @@ use App\Repository\PaymentScheduleRepository;
 use App\Repository\ProductRepository;
 use App\Tests\Common\AssertObject\PaymentScheduleAssertObject;
 use App\Tests\Common\TestCase\IntegrationTestCase;
-use App\Tests\DataFixtures\ProductFixtures;
 use DateTimeImmutable;
 use PHPUnit\Framework\Assert;
 

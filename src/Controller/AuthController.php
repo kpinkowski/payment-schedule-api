@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Dto\AuthDto;
-use App\Dto\CalculatePaymentScheduleRequest;
 use App\Service\AuthService;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -51,7 +50,7 @@ final class AuthController
                 description: "Invalid credentials",
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: "error", type: "string", example: "Invalid email")
+                        new OA\Property(property: "error", type: "string", example: "Invalid credentials")
                     ]
                 )
             )
@@ -63,7 +62,7 @@ final class AuthController
         $errors = $this->validator->validate($dto);
 
         if (count($errors) > 0) {
-            return new JsonResponse(['error' => (string) $errors], Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['error' => 'Invalid credentials'], Response::HTTP_BAD_REQUEST);
         }
 
         $token = $this->authService->getJWT($dto);

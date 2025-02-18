@@ -17,7 +17,6 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Serializer\SerializerInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Throwable;
 
@@ -28,7 +27,6 @@ final class ScheduleController
     use HandleTrait;
 
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
         private readonly ValidatorInterface $validator,
         private readonly SerializerInterface $serializer,
         MessageBusInterface $bus

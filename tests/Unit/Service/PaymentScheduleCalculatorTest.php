@@ -15,7 +15,6 @@ use App\Service\PaymentRules\StandardPaymentScheduleStrategy;
 use App\Service\PaymentScheduleCalculator;
 use App\Tests\Common\TestCase\UnitTestCase;
 use DateTimeImmutable;
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 

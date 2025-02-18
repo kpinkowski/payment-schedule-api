@@ -21,7 +21,7 @@ final class UserFixture extends Fixture
     {
         $user = new User(
             self::ADMIN_EMAIL,
-            [UserRole::ADMIN]
+            [UserRole::ADMIN->value]
         );
 
         $hashedPassword = $this->passwordHasher->hashPassword($user, self::ADMIN_PASSWORD);

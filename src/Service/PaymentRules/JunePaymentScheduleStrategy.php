@@ -10,7 +10,6 @@ use App\Entity\PaymentScheduleItem;
 use App\Entity\Product;
 use App\Exception\IncorrectProductDateSoldAndScheduleStrategyUsageLogicException;
 use DateTimeImmutable;
-use DateTime;
 
 final class JunePaymentScheduleStrategy implements PaymentScheduleStrategyInterface
 {
