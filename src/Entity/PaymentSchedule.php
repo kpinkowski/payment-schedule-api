@@ -53,18 +53,6 @@ class PaymentSchedule
         return $this;
     }
 
-    public function removePaymentScheduleItem(PaymentScheduleItem $paymentScheduleItem): static
-    {
-        if ($this->paymentScheduleItems->removeElement($paymentScheduleItem)) {
-            // set the owning side to null (unless already changed)
-            if ($paymentScheduleItem->getPaymentSchedule() === $this) {
-                $paymentScheduleItem->setPaymentSchedule(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getProduct(): ?Product
     {
         return $this->product;

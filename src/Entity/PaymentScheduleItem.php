@@ -53,13 +53,6 @@ class PaymentScheduleItem
         return $this->dueDate;
     }
 
-    public function setDueDate(DateTimeInterface $dueDate): static
-    {
-        $this->dueDate = $dueDate;
-
-        return $this;
-    }
-
     public function getAmount(): Money
     {
         return $this->amount;
