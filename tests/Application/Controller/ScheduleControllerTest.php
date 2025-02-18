@@ -21,7 +21,7 @@ final class ScheduleControllerTest extends ApiTestCase
                 'amount' => 1000,
                 'currency' => Currency::USD->value
             ],
-            'productDateSold' => '2021-01-01',
+            'productDateSold' => '2025-01-01T00:00:00+00:00',
             'productType' => ProductType::ELECTRONICS->value
         ];
 
